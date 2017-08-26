@@ -1,0 +1,1664 @@
+DAY#1 INTRODUCTION TO CISCO
+
+TASK#0 CISCO PROMPTS 
+[yes/no] -->> setup mode 
+         -->> idiots mode
+         1. brand new 
+         2. someone do password recovery 
+         3. somebody erase the configuration 
+         ctrl+c 3x enter 3x
+Router> -->> user mode or saling pusa mode 
+         basic ping and basic show 
+         enable 
+Router# -->> privilege mode 
+         advance show, save, erase, debug,
+         reload or reboot, ping 
+configure terminal or conf t
+Router(config)# -->> global config mode 
+        -->> anything about configuration but you 
+             cannot use show commands here! 
+ip dhcp pool TEST 
+Router(dhcp-config)#exit 
+line console 0
+line vty 0 14
+Router(config-line)#exit
+int giga0/0
+Router(config-if)#exit     
+type: end or ctrl+c = privilege mode
+Router#conf t
+Router(config)#
+
+TASK#1 What is CCNA? 200-120 R&S
+It's a MUST! 
+CCNA Security, CCNA Wireless, CCDA Design, 
+CCNA Collaboration, CCNA Data Center 
+          
+TASK#2 Configuration for Analog 
+analog 1
+conf t 
+  voice-port 0/3/0 
+    no shutdown 
+    cptone PH/US
+    comfort-noise
+    signal loopstart 
+    caller-id enable 
+    station-id name "name1"
+    exit
+  dial-peer voice 1 pots -->> analog 
+    destination-pattern M30 -->> M "monitor number" 
+    port 0/3/0
+    do csim start M30 -->> to test if its working
+
+analog 2
+conf t 
+  voice-port 0/3/1 
+    no shutdown 
+    cptone PH/US
+    comfort-noise
+    signal loopstart 
+    caller-id enable 
+    station-id name "name2"
+    exit
+  dial-peer voice 2 pots -->> analog 
+    destination-pattern M31 -->> M "monitor number" 
+    port 0/3/1
+    do csim start M31 -->> to test if its working
+
+analog 3
+conf t 
+  voice-port 0/3/2 
+    no shutdown 
+    cptone PH/US
+    comfort-noise
+    signal loopstart 
+    caller-id enable 
+    station-id name "name3"
+    exit
+  dial-peer voice 3 pots -->> analog
+    destination-pattern M32 -->> M "monitor number" 
+    port 0/3/2
+    do csim start M32 -->> to test if its working
+
+analog 4
+conf t 
+  voice-port 0/3/3 
+    no shutdown 
+    cptone PH/US
+    comfort-noise
+    signal loopstart 
+    caller-id enable 
+    station-id name "name4"
+    exit
+  dial-peer voice 4 pots -->> analog 
+    destination-pattern M33 -->> M "monitor number" 
+    port 0/3/3
+    do csim start M33 -->> to test if its working         
+     
+TASK#3 CISCO HARDWARE "BLADE/SLOT/PORT"
+       CISCO PHYSICAL PROPERTIES
+
+TASK#4 MINIMUM CISCO COMMANDS THAT YOU NEED TO KNOW! 
+       SUPER BASIC CISCO COMMANDS
+conf t 
+  hostname VG-NameMo-US/PH 
+  enable secret pass -->> put password: pass
+  no logging console -->> stfu
+  no ip domain-lookup -->> stfu
+  no service config -->> stfu
+  service pasword-encryption 
+  line console 0 -->> light blue cable on console port
+    password pass -->> protect console
+    login  
+    exec-timeout 0 0 -->> disable session timeout (automatic logout)
+    exit 
+  line vty 0 14 -->> remote persons
+    password pass -->> protect remote session: telnet/ssh 
+    login 
+    exec-timeout 0 0 
+    exit 
+
+TASK#5 DHCP SERVER "Dynamic Host Control Protocol"
+conf t 
+  interface giga 0/0 
+    no shutdown 
+    ip address 192.168.M.1 255.255.255.0 
+    end
+ping 192.168.M.1 -->> success rate 100%
+conf t 
+  ip dhcp excluded-address 192.168.M.1 192.168.M.50 
+  ip dhcp pool BIGAYIP 
+    network 192.168.M.0 255.255.255.0 
+    default-router 192.168.M.1 -->> default gateway
+    option 150 ip 192.168.M.1 -->> TFTP of IP Phone
+    domain-name CCNA.com 
+    dns 8.8.8.8 4.2.2.2 
+
+TASK#6 NETWORK DIAGRAM 
+windows+r = cmd 
+ipconfig /release -->> pag release ng dating IP
+ipconfig /renew -->> pag hingi ng bagong IP
+route print -->> pang lalake?
+netstat -rn -->> pang tunay na lalake!
+
+
+Reset IP Phone 
+Press Gear Button -->> Scroll All The Way Down 
+Admin Settings -->> Scroll All The Way Down 
+Reset Settings 
+Select All Button 
+Reset All 
+Press Gear Button 
+Go To Phone Information 
+Check The IP Address 
+Go Back To CMD Ping The IP Address Of The IP Phone 
+
+TASK#7 SAVE CISCO CONFIGURATIONS 
+For 40 years old 
+wr 
+For 39 and below 
+copy run start 
+
+TASK#8 CONFIGURATION OF IP PHONE 
+IP TELEPHONY CONFIGURATION
+conf t
+  no telephony-service
+  telephony-service -->> enable CUCMe (Cisco Unified Call Manager Express)
+    no auto-reg-ephone -->> no auto assign of numbers
+    no auto assign
+    max-dn 5 -->> max local
+    max-ep 5 -->> max ip phone
+    ip source-address 192.168.M.1 port 2000 -->> sccp skinny client control protocol
+    create cnf-files -->> push the config to ip phone
+    !ignore the warning! -->> wag itype
+    exit 
+HOW TO REGISTER IP PHONE
+conf t
+  ephone 1
+    mac-address XXXX.XXXX.XXXX
+    type 6941
+    exit    
+CREATE DIRECTORY NUMBER (DN) FOR IP PHONE
+conf t
+  ephone-dn 1
+    number M01
+    exit    
+ASSIGN THE DN TO IP PHONE
+conf t
+  ephone 1        1 M01    3 m02
+    button 1:1        2    4
+    restart
+    end
+
+TASK#9 WAN CONFIGURATION
+conf t
+  interface se 0/0/1 
+    no shutdown
+    end
+show controllers se 0/0/1 -->> to know if you are DTE or DCE
+CTRL+C
+For DTE Moral Support
+For DCE Only:
+conf t
+  int se 0/0/1
+    clock rate 128000
+    end
+PH:
+conf t
+  int se 0/0/1
+    no shut
+    ip address 200.0.0.1 255.255.255.0
+US:
+conf t
+  interface se 0/0/1
+    no shut
+    ip address 200.0.0.2 255.255.255.0
+PH Ping US
+US Ping PH
+
+TASK#10 DATA ROUTING -->> to ping your katabi
+PH and US
+conf t
+  router eigrp 100 
+    network 0.0.0.0
+    network 192.168.M.0
+    network 200.0.0.0
+    no auto-summary
+    end
+ping 192.168.K.1 -->> Router
+ping 192.168.K.X -->> PC
+ping 192.168.K.X -->> IP Phone
+
+TASK#11 VOICE ROUTING -->> to call your katabi
+inbound call: 
+conf t
+  voice service voip
+    ip address trusted list 
+      ipv4 0.0.0.0 0.0.0.0 -->> accept any call
+      end
+outbound call:
+conf t
+  dial-peer voice K voip
+    destination-pattern K..
+    session target ipv4:192.168.K.1
+    no vad
+    codec g711uLaw
+    end    
+
+TASK#12 IMPORTANT SHOW COMMANDS
+1.show run  or sh running-config 
+-->> shows all commands that you have type
+show start or sh startup-config
+-->> shows all saves commands    
+show ip interface brief
+-->> shows all data ports and ip addresses
+show voice port summary
+-->> shows all voice ports
+show dial-peer voice summary
+-->> shows all number that you can call
+show version
+-->> shows IOS(operating system)version, RAM memory, processor,
+flash(hard drive), NVRAM(startup config)
+
+TASK#13 OSI LAYER OPEN SYSTEM INTERCONNECTION
+L7 A http telnet, ssh, ftp
+L6 P codec -->> jpeg, png, gif, mp4, avi
+L5 S data streams 
+L4 T segments -->> source port
+              destination port
+L3 N ip packets -->> source ip address
+             destination ip address
+L2 D frame -->> source mac address
+                destination mac address                 
+L1 P 
+
+http://www.webopedia.com/quick_ref/OSI_Layers.asp
+
+TASK#14 HOW TO CONSOLE ANY CISCO DEVICE
+1. windows + r
+   type devmgmt.msc
+   -->> look for the "PORT(COM&LPT)"
+2. open securecrt, click quick connect or alt + q
+   protocol: serial
+   port: (it depends on the pc, based on device manager)
+   baud rate: 9600 -->> constant!
+   data bits: 8
+   parity: none
+   stop bits: 1
+   DTR/DSR: unchecked!
+   data terminal ready / data set ready
+   RTS/CTS: unchecked!
+   request to send / clear to send
+   XON/XOFF: unchecked!
+   open in tab: checked!
+
+http://stackoverflow.com/questions/957337/what-is-the-difference-between-dtr-dsr-and-rts-cts-flow-control
+                                       
+first know your partner, today we will setup call center bakit call center sir? 
+nandito lahat ng problem sa call center DATA,VOICE,VIDEO 
+introduce PH and US                       
+have you saw analog and ip phone, check mo kung my dial tone yung analog               
+hindi nga nakasaksak yan eh, chineck mo? configure mo mamaya yan mamaya       
+pero kunware ok na yung ginawa mo pero yung sa tropa mo or             
+katabi mo nag kaproblema, na shit! matatawagan mo? hindi!           
+okay eye to eye kayo, kilalalanin mo, sabihin mo wag ka            
+mashit mamaya mashishit ako hehe joke lang baka lalong ma shit hihi. 
+we are not a college or traditional instructor,  
+we are your coach yung libro madalas gagawin natin yan so bring           
+it every session yung notebook bakit malaki? for diagraming           
+yung blue book dyan lahat ng interview question.               
+introduce the different kind of cable. sa sobrang kompleto nung        
+blue book pati japanese language meron tayo!                   
+bakit japanese dahil mabait sila sa pinoy ngayon. marunong ka mag        
+filipino bicolano ilocano wala silang pake dun.                   
+same position and job description                       
+JAPANESE AND ENGLISH - 40k                           
+JAPANESE AND TAGALOG - 120k                           
+paano ka gagaling? humanap ka ng japanese na gf,                
+pag may asawa ka na coffee coffee lang.                       
+                                       
+bakit 0 kasi si cisco laging nagstart sa 0, nakikita mo yung yes/no as of now 
+you are talking to cisco, mga may alam please bear with me i just want to 
+start with the very basic ganito nalang kapag si gf nagtanong ng yes/no anong 
+isasagot mo? shit easy to get.                               
+                                       
+maglalagay ka ng time and date, walang tangang network administrator ang gumagawa
+ng ganun. answer it with a ctrl+c mga 5x then enter enter lang, dahan dahan please
+marunong ka mag dahan dahan? hangang sa lumabas yung router>
+check mo yung katabi mo baka ngayon palang na gg na, ngayon palang umaga hahaha    
+
+kapag ito lang ang binigay sayo ng access ng company mo. ano ka? saling pusa
+user exec mode, you can only do basic show and basic ping. you cant do anything 
+harmful to your network device. no reboot, no password recovery. as in wala kang
+magagwang matino dyan sa router mo on that mode. type enable
+
+kapag nakita mo yan # sign. ano yan sign na yan? hanep! sa lalaki ko pa talaga 
+narinig that is pound sign privilege mode. you can do advance show, ping, erase 
+config, save config, reload, and debug. madalas ang ginagawa talaga sa privilege
+mode ay mag show, but you can't change the settings of your router. configu t
+
+if you want to go back to privilege mode, type exit. nasa privilege mode ka na.            
+if you want to go back to user exec mode type ano? hindi exit. disable.
+hindi ka pwede magjump of dito, so step by step. bago ka mag global config dapat 
+dumaan ka muna ng privilege mode
+back to global config
+line mode
+dhcp mode
+interface mode
+ang gagawin natin kung paano magmukang magaling. i need to know kung sino ang mga
+gamer dito dapat hindi pokemon or plants vs zombie anong madalas nabubura kapag 
+gamer ka? [w,a,s,d] ayaw kong kakampi yung s ang nabubura atras ng atras yun eh.
+en tab automatic mag enable na yan, conf tab t tab so dapat before mag tanghali 
+as a network engineer dapat burado na yan ha! basta! gawan mo ng paraan hihi.
+[try ng i try ang CESCO ]
+end, diretso ng privilege mode or ctrl+c ctrl+charlie. wag ctrl+z magkaiba yun. 
+back to privilege mode. try na natin mag jump ng different mode para mag mukang 
+magaling. check mo nga yung katabi mo ok pa ba yan? haha. nahihirapan ka ba mgtype.
+ako rin hirap. kapag nagtype ka ng pangalan mo. diba hindi ka na tumitingin sa 
+keyboard. reflex nalang yung pumipindot sa keyboard. dapat lahat ito reflex na 
+din, so practice lang ng practice dpaat habang break try mo ng try. anong reflex
+mo kapag nakakakita ka ng chicks na naka skirt. alam mo yun.
+
+KNOW YOUR NETWORK DEVICES AND PHYSICAL / LOGICAL DIAGRAM
+nakikita mo ba yung mga equipment sa harap mo. ano dyan yung router? yung 
+dalawang mataba sa ilalim. kapag switch yung mapayat na maraming butas.
+voip phone, analog phone, wireless phone, wireless access point
+PH [LAHAT NG NASA TAAS]
+US [MGA NASA BABA] since US ka you need to talk like one. anong sasabihin mo?
+pc mo iilaw talaga yan, kabit si ipphone yung analog mo pwede mong ihampas or 
+ibato. yung voip phone. 20K each. yung pag hawak ng ipphone kasama handset.
+dapat nakatuwad, marunong ka magpatuwad? diba pag napatuwad mo na may dalawang 
+butas? sa port 3 ba nakasaksak, dapat mag on na yan. get the analog phone. 
+ano yung termination? rj11 it have 6 pins, ikabit mo na yan sa router look for 
+the fxs. kahit anong port. ang importante kapag kabit mo my dialtone. now connect
+it to port 0.
+
+as a voice administrator dapat alam mo ang mga ibat ibang bansa if you have a 
+big company dapat lahat yan alam mo, kapag hindi nagbago yan bigyan kita ng pangtutuli mamaya.
+       
+4x4=16 bakit 16 kasi apat na 4, eh bakit 4x4 sobrang lalim mag isip brad. shit! 
+given ko yun. talo pa gf mo eh tanong ng tanong masyadong malalim magisip
+
+what are the difference between ip phone and analog
+ANALOG                VOIP
+ROUTER                SWITCH
+configure the port        configure the phone
+yung phone sa bahay niyo kahit palitan mo ng palitan di magbabago number nun
+
+
+do csim start M00
+walang mag enter mahuhuli ko kapag nag enter ka.
+abay sabay tayo mag enter.
+check mo kung may sumagot sayo. kapag nangyari yung kabahan ka na.
+test the number kung buhay, pang test lang itong command na ito.
+tama na please iangat mo na. para huminto haha. tama na.
+create me a port m01, m02, m03,
+voice port 0/3/0 1,2,3 make sure na hindi magpapatong yung dial-peer voice # pots
+
+fxs -->> foreign exchange station
+db9 -->> smart serial to be exact.
+wic-2t -->> 2 ports serial wan interface card
+       -->> a two port version of the wic-1t, high speed
+            sync 5 in 1 card, supports higher speeds and more function
+       -->> i use this card for high speed circuits like t1 lines that uses
+            external csu/dsu and other special functions
+wic-2a/s -->> 2 ports async/sync wan interface card
+si cisco mahilig mag satart to 0 cisco madalas mag bilang from right to left
+6500 is a series its not the model depende sa blade ang model, detachable
+modular na hahatak pwedeng blanko built in yan madalas dalawa dalawa lang
+ang lumang command pang save wr bago yung copy runs start
+by the way rivan it is a person vue testing center, para mabuhay ang port ng 
+cisco router mo no shut, pag di mo naapiping baka naka shutdown lang
+para malagyan ng configuration ang ip phone mo need niya ng ip
+2 ways para malagyan yung ip phone mo ng ip static or dynamic
+pag nag sesetup ka ng tunay na call center wag static dynamic dapat hihi
+sir bakit ayaw mo ibigay yung ip address na 1 to 50 1 - 50 boss
+cisco    avaya    asterix
+sccp    h323    sip
+    1720    5060
+sino yung laging nag aaway samsung at sony dati cisco at apple
+
+DAY#2 FINGERING METHOD or SUBNETTING :)
+
+TASK#0 DECIMAL TO BINARY
+
+1.  70  - 01000110    11. 50  - 00110010    21. 165 - 10100101
+2.  150 - 10010110    12. 80  - 01010000
+3.  120 - 01111000    13. 210 - 11010010
+4.  170 - 10101010    14. 230 - 11100110
+5.  220 - 11011100    15. 90  - 01011010
+6.  180 - 10110100    16. 239 - 11101111
+7.  100 - 01100100    17. 190 - 10111110
+8.  240 - 11110000    18. 250 - 11111010
+9.  63  - 00111111    19. 154 - 10011010
+10. 223 - 11011111    20. 88 -  01011000
+    
+TASK#1 GETTING THE SLASH /
+
+/6  252.0.0.0  (1st,4i)
+/11 255.224.0.0 (2nd,32i)
+/14 255.252.0.0 (2nd,4i)
+/21 255.255.248.0 (3rd,8i)
+/30 255.255.255.252 (4th,4i)
+/27 255.255.255.224 (4th,32i)
+
+/17 255.255.128.0 (3rd,128i)
+/23 255.255.254.0 (3rd,2i)
+/14 255.252.0.0 (2nd,4i)
+/19 255.255.224.0 (3rd,32i)
+/18 255.255.192.0 (3rd,64i)
+/4 240.0.0.0 (1st,16i)
+
+/5 248.0.0.0 (1st,8i)
+/12 255.240.0.0 (2nd,16i)
+/18 255.255.192.0 (3rd,64i)
+/30 255.255.255.252 (4th,4i)
+/22 255.255.252.0 (3rd,4i)
+
+/26 = 255.255.255.192 = (4th,64i)         
+/21 = 255.255.248.0   = (3rd,8i)            
+/24 = 255.255.255.0   = (3rd,1i)           
+/11 = 255.224.0.0     = (2nd,32i)          
+/29 = 255.255.255.248 = (4th,8i)           
+/17 = 255.255.128.0   = (3rd,128i)         
+/18 = 255.255.192.0   = (3rd,64i)          
+/28 = 255.255.255.240 = (4th,16i)            
+/14 = 255.252.0.0     = (2nd,4i)           
+/19 = 255.255.224.0   = (3rd,32i)          
+/5  = 248.0.0.0       = (1st,8i)           
+/12 = 255.240.0.0     = (2nd,16i)          
+/18 = 255.255.192.0   = (3rd,64i)          
+/30 = 255.255.255.252 = (4th,4i)
+
+TASK#2 IP CLASSFUL AND IP CLASSLESS
+127 - Loopback
+    16M        65K        254H        
+    A/8        B/16        C/24        D&E
+PUBLIC    1-126        128-191        192-223        224-255
+PRIVATE 10.X.X.X    172.16.X.X    192.168.X.X
+            172.31.X.X
+                    
+Public IP - Routable in the Internet, From ISP
+Private IP - Not Routable in the Internet
+Classful IP Address - in the Default Slash
+Classless IP Address - not in the Default Slash
+
+Examples of Classless
+10.0.0.0/10
+10.0.0.0/16
+192.0.0.0/8
+
+Network - Kalye
+Host - Bahay
+Broadcast - Bunso
+Tumigin Lagi sa / Para Malaman Kung Kalye or Bahay
+
+10.0.0.0/8     Classful
+10.0.0.0/8     (1st,1i)
+10.0.0.1       First Usable Host
+10.255.255.254 Last Usable Host
+10.255.255.255 (B) Broadcast
+11.0.0.0       2nd Network or Reference
+12.0.0.0       3rd Network or Reference
+
+Bawal Magkaparehas Na Kalye or Network sa Isang Interface
+No Overlapping Network And Subnetting
+
+Steps To Subnet
+1. Get The Bits = Get The Highest Finger Standing
+2. /32 - Bits = /N (The New Subnet / New Slash)
+3. (Octet,I "Increment")
+4. Network (New Network) Add The Increment on The Said Octet
+5. Valid Range of Host , Broadcast
+
+10.0.0.0/8 6 Networks -->> Major Network
+
+A. 100 Host 7 Bits
+/25 (4th,128i)
+10.0.0.128/25
+10.0.0.129-254
+10.0.0.255 (B)
+
+B. 60 Host 6 Bits
+/26 (4th,64i)
+10.0.0.64/26
+10.0.0.65-126
+10.0.0.127 (B)
+
+C. 25 Host 5 Bits
+/27 (4th,32i)
+10.0.0.32/27
+10.0.0.33-62
+10.0.0.63 (B)
+
+D. 50 Host 6 Bits
+/26 (4th,64i)
+10.0.1.0/26
+10.0.1.1-62
+10.0.1.63 (B)
+
+E. 10 Host 4 Bits
+/28 (4th,16i)
+10.0.0.16/28
+10.0.0.17-30
+10.0.0.31 (B)
+
+F. 30 Host 5 Bits
+/27 (4th,32i)
+10.0.1.64/27
+10.0.1.65-94
+10.0.1.95 (B)
+
+H. 4 Host 3 Bits
+/29 (4th,8i)
+
+I. 150 Host 8 Bits
+/24 (3rd,1i)
+
+Equal Subnetting
+1. Get The Number Of Networks
+2. Get The Bits
+3. /Original SM + Bits = /? (New SM)
+4. Octet, I Increment
+5. Network, Host, Broadcast
+
+TASK#3 SUPERNETTING / AGGREGATION / SUMMARIZATION
+LETS VOLT IN "RIVAN WAY"
+
+Choices: 128 64 32 16 8 4 2 1 Eto Yung Mga Incremet's Or Choices
+
+1. VIA 4
+4 "8" 12 16
+ 9.0.0.0 /8   <<<--- Eto Ang Binabanatan      
+10.0.0.0 /8   8.0.0.0 /6 = (1st,4i)
+11.0.0.0 /8   Anong / Yung 4i sa Octet na Binabanatan
+    
+2. VIA 8
+32 40 "48" 56
+50.0.0.0 /8   <<<--- Eto Ang Binabanatan       
+51.0.0.0 /8   48.0.0.0 /5 = (1st,8i)
+52.0.0.0 /8   Anong / Yung 8i sa Octet na Binabanatan
+
+3. VIA 16
+64 80 "96" 112 128
+172.100.0.0/16
+
+172.101.0.0/16
+
+172.102.0.0/16
+
+172.103.0.0/16   <<<--- Eto Ang Binabanatan
+
+172.104.0.0/16     172.96.0.0/12 = (2nd,16i)
+172.105.0.0/16   Anong / Yung 16i sa Octet na Binabanatan
+172.106.0.0/16
+172.107.0.0/16
+172.108.0.0/16
+
+4. VIA 16
+
+160 176 192 "208" 224
+192.168.210.0/24
+
+192.168.211.0/24
+
+192.168.212.0/24
+
+192.168.213.0/24
+
+192.168.214.0/24   <<<--- Eto Ang Binabanatan
+192.168.215.0/24   192.168.208.0/20 = (3rd,16i)
+192.168.216.0/24   Anong / Yung 16i sa Octet na Binabanatan
+192.168.217.0/24    
+192.168.218.0/24
+192.168.219.0/24
+
+192.168.220.0/24
+
+5. VIA 64
+"64" 128 192 256
+172.16.219.0/24
+
+172.16.220.0/24      <<<--- Eto Ang Binabanatan
+172.16.221.0/24   172.16.192.0/18 = (3rd,64i)
+172.16.222.0/24   Anong / Yung 64i sa Octet na Binabanatan
+172.16.223.0/24
+172.16.224.0/24
+
+if ip subnet-zero command is given "zero ang start mo"
+if ip subnet-zero command is not given "hindi zero ang start mo"
+
+http://resources.intenseschool.com/ccna-prep-route-summarization-a-need-for-a-routing-table/
+
+DAY#3 CISCO ROUTING
+
+TASK#0 REGISTER IP PHONE AND ANALOG PHONE
+
+TASK#1 NETWORK TOPOLOGY
+Draw 4 routers and 4 switch
+
+conf t
+  no ip routing
+  ip routing
+
+ping 192.168.A.1 -->> directly connected
+how to ping not directly connected networks
+use the routing protocols
+    
+ROUTING PROTOCOLS
+"DYNAMIC ROUTING PROTOCOLS" uses directly connected networks
+M  M-MPLS
+R  R-RIP 
+B  B-GP
+O  O-SPF
+D  D-EIGRP
+"STATIC ROUTING PROTOCOLS" uses not directly connected networks
+S  S-TATIC
+S* S-TATIC
+
+show commands for directly connected networks
+show ip route connected | ex L  
+
+directly connected networks
+
+not directly connected networks
+
+TASK#2 STATIC ROUTING PROTOCOL 
+ip route <network of not directly connected> <subnetmask of not directly connected> <first hop>
+
+TASK#3 VOIP ROUTING
+INBOUND:
+conf t
+  voice service voip 
+    ip address trusted list
+      ipv4 0.0.0.0 0.0.0.0
+OUTBOUND
+conf t
+  dial-peer voice K voip
+    destination-pattern K..
+    session target ipv4:192.168.K.1
+    no vad
+    codec g711uLaw
+    end
+
+TASK#4 DEFAULT STATIC OR STUB ROUTING
+
+can only be used by stub router -->> only have first hop                         
+A:
+ip route 0.0.0.0 0.0.0.0 200.A.B.6
+D:
+ip route 0.0.0.0 0.0.0.0 200.C.D.5
+
+Task#5 D'EIGRP Enhanced Interior Gateway Routing Protocol
+-->> 25% on your CCNA Exam
+-->> Dynamic Routing Protocol
+  -->> Hybrid Distance Vector
+-->> Only CISCO Can Use It
+-->> Administrative Distance (AD) 90
+
+conf t
+  no ip routing
+  ip routing
+
+OLD EIGRP
+conf t
+  router eigrp 1
+    network 192.168.M.0
+    network 200._._.0
+    network 200._._.0 -->> only B and C
+    no auto-summary
+
+NEW EIGRP
+conf t
+  router eigrp 1
+    network 192.168.M.0 0.0.0.255 -->> wildcard
+    network 200._._.4 0.0.0.3
+    network 200._._.4 0.0.0.3
+        
+EIGRP show commands
+show ip route eigrp
+-->> shows best routes
+show ip protocols
+-->> exam life line 117
+-->> asn
+-->> metric values
+-->> if auto summarization is enabled or disabled 
+-->> routing for networks
+show ip eigrp topology
+-->> show all possible routes
+-->> feasible distance and reported distance (advertised distance)
+-->> FD is always greater than the RD
+
+TASK#6 OSPF Open Shortest Path First
+-->> dynamic routing protocol
+  -->> link state
+-->> open Standard, anyone can use it
+-->> multi vendor router 
+
+conf t
+  router ospf 1 -->> Process ID
+    network 192.168.M.0 0.0.0.255 area 0 -->> all the same area
+    network 200._._.4 0.0.0.3 area 0
+    network 200._._.4 0.0.0.3 area 0 
+
+conf t
+  no router eigrp 1
+  end
+  show ip route ospf
+
+OSPF show commands
+show ip route ospf
+-->> shows best routes 
+show ip ospf database 
+-->> router id is the name of your router in OSPF
+1. user define router-id 1.1.1.1
+2. virtual ip address, loopback interface
+3. highest physical ip
+show ip protocols    
+-->> process id
+-->> routing for networks
+-->> area number
+
+TASK#7 
+IGP -->> Interior Gateway Protocol 
+    -->> inside the company like rip, ospf, eigrp, static
+EGP -->> Exterior Gateway Protocol
+    -->> outside the company like bgp
+conf t
+  no router ospf 1
+  end
+
+BGP -->> Boarder Gateway Protocol
+conf t
+  router bgp M
+    neighbor 200.M.R.6 remote-as R !!! A,B,C
+    neighbor 200.L.M.5 remote-as L !!! B,C,D
+    network 200.M.R.4 mask 255.255.255.252 !!! A,B,C
+    network 200.L.M.4 mask 255.255.255.252 !!! B,C,D
+    network 192.168.M.0 mask 255.255.255.0 !!! A,B,C,D
+    no auto-summary
+    end
+show ip route bgp
+
+DAY#4 ACCESS CONTROL LIST
+
+30% eigrp
+10% ospf
+40% access control list
+20% mc
+
+facebook - data - tcp
+messenger chat - voice - udp
+youtube - data - tcp - nag dodownload ka pa
+skype - data voice it depends - tcp udp
+nba live streaming - voice - udp - kasi bawal ibalik
+
+tcp - connection oriented ' binabato niya yung na putol na data
+udp - connection less oriented ' hindi niya ibabalik yung na putol na data
+kaya udp ang gamit sa voice and video kasi sample 'hexxo' heoll'
+
+rules of access control list (ACL)
+standard 1-99
+extended 100-199
+1. must have a name "new" or number "old/exam"
+2. allow = "PERMIT" block = "DENY"
+3. reads from TOP to BUTTON
+4. data = "TCP" voice = "UDP" ping = "ICMP" all = "IP"
+5. auto deny any any - explicit
+6. sandara - in or out - finisher combo hihi
+
+ws - 80,443
+fs - 20,21 -->> obsolate na
+sftp - 22
+
+ccna security master the ports
+common ports
+http = 80    pop3 = 110
+https = 443    imap = 143
+ftp = 20,21    dns = 53
+sftp = 22    dhcp/bootp = 67,68
+telnet = 23    tftp = 69
+ssh = 22    smtps = 465
+smtp = 25    chargen = 19
+sip = 5060    sccp = 2000
+lahat ng hacking nagagawa sa layer 4
+hacking
+bank - government - hospital - school
+telnet ws 80
+telnet ws 19 -->> chargen "character generator"
+
+renaissance
+social engineering
+wireshark
+honeypot - group of people
+     - fake server
+mr. robot
+ping www.ccp.edu.ph
+nmap -sP 192.185.164.0/24
+nmap -v 192.185.164.254
+
+ws#show processes cpu
+ways of attacking server
+dos denial of service
+ctrl+shift+6 then x -->> to stop the attack in port 19
+disconnect 1,2,3,4,5 enter x3
+pa px = mga bad guys hihi
+access control list can only block layer 3 and layer 4
+spoofing - nagpapanggap na tunay siya na ip "di kaya ni acl"
+
+top 7 firewalls
+1. checkpoint
+2. palo alto
+3. juniper srx
+4. fortigate / fortinet
+5. cisco asa (adaptive security appliance)
+6. sonic wall
+7. baracuda
+8. cyber roam
+9. pfsense
+
+NIDS - network intrusion detection system
+NIPS - network intrusion prevention system 
+"after 1 month dapat marunong na ko mag cisco asa firewall configuration"
+pag nag configure block mo lagi si china at russia
+
+access-list # protocol hacker victim eq "equal to" port
+
+pa -> permit 80 ws
+pa -> permit 443 ws
+pa -> deny all ws ***** rule #5
+pa -> permit 22 fs
+pa -> deny all fs ***** rule #5
+
+access-list 100 permit tcp host pa host ws eq 80
+access-list 100 permit tcp host pa host ws eq 443
+access-list 100 permit tcp host pa host fs eq 22
+
+conf t
+  interface fa 0/0
+    ip access-group 100 out
+
+no access-list 100 -->> sira kandado
+no ip access-group 100 out -->> unlock kandado
+
+ACL LABORATORY
+You are a newly hired network administrator in cisco philippines and your task is to configure this policy.
+Only PA can access http of web server, any other client is block on http of web server.
+Any other server should not be affected.
+If you cannot do this go back to your old career as a BEAUTICIAN.
+
+HOW TO PROTECT REMOTE SESSION
+R2:
+conf t
+  access-list 1 permit 201.0.0.0 0.0.0.255 any 
+  line vty 0 14
+    access-class 1 in
+    end
+
+pag papasok sa acl ng "interface" ip access-group 100 in/out -->> extended
+pag papasok sa acl ng "line" access-class 1 in/out -->> standard
+
+command para malaman kung may naka connect sa router mo
+show line
+*cty - console
+*vty - remote
+clear line # (kung saan may value yung asteris)
+
+PA        R1
+ping ws        show ip    
+ping fs        nat    
+ping px        translation
+
+Network GAY Admin -->> NAT -->> Network Address Translation
+Windows GAY Admin -->> Proxy
+Linux MASTER Admin -->> Masquerade
+
+R1: 
+STEP 1: DEFINE PRIVATE AND PUBLIC INTERFACES
+conf t
+  interface se 1/0 -->> public interface
+    ip nat outside
+    exit
+  interface fa 0/0 -->> private interface
+    ip nat inside
+    exit    
+STEP 2: CREATE AN ACL TO ALLOW ALL PRIVATE NETWORK
+conf t
+  access-list 1 permit 192.168.69.0 0.0.0.255 any
+  exit
+STEP 3: CREATE A NAT COMMAND
+conf t                                         share a port! 
+  ip nat inside source list 1 interface se 1/0 overload -->> pat port address translation
+  exit
+
+LAN -->> Local Area Network ->> Ethernet    
+WAN -->> Wide Area Network
+
+    Leased Line    Frame Relay
+    HDLC    PPP    Frame Relay
+    DATA    DATA
+        VOICE
+        VIDEO
+
+leased line -->> synchronous
+dsl or frame relay -->> asynchronous
+sla -->> service level agreement
+cir -->> committed information rate
+ha -->> high availability
+
+HOW TO CONFIGURE FRAME-RELAY
+R1 & R2:
+conf t
+  interface se 1/3
+    no shut
+    encapsulation frame-relay
+    ip address 172.12.0.1 255.255.0.0 -->> R1
+    ip address 172.12.0.2 255.255.0.0 -->> R2
+
+how to know if frame relay ang na setup sa inyo? ping!
+you cannot ping your own ip by default
+
+FRAME-RELAY MAPPING OR HOW TO FAKE LEASED LINE
+R1:
+conf t
+  interface se1/3
+    frame-relay map ip 172.12.0.1 102 broadcast
+    frame-relay map ip 172.12.0.2 102 broadcast
+R2:
+conf t
+  interface se1/3
+    frame-relay map ip 172.12.0.1 201 broadcast
+    frame-relay map ip 172.12.0.2 201 broadcast
+
+DLCI -->> data link connection identifier
+PVC -->> private virtual circuit
+
+R1 & R2:
+conf t
+  interface se1/3
+    bandwidth 512 -->> automatic frame-relay
+    exit
+  router eigrp 100
+    network 172.12.0.0
+    end
+
+traceroute para malaman kung saan ang primary at secondary na dinadaanan
+ctrl+shift+6 to cancel ping
+show frame-relay pvc -->> to see BECN, FECN and DE
+
+FECN -->> forward explicit congestion notification
+mag kakavalue if your upload congestion goes up, up stream
+BECN -->> backward explicit congestion notification
+magkakavalue if your upload congestion goes down, down stream
+DE -->> discard eligible 
+if the value of de goes up your bandwidth go below your cir
+
+FECN -->> forward explicit congestion notification
+BECN -->> backward explicit congestion notification
+DE -->> discard eligible
+HDLC -->> high level data link control
+PPP --> point to point protocol 
+M -->> ultilink
+A -->> uthentication
+C -->> ompression
+E -->> rror Detection
+
+MULTILINK OR FUSION CONFIGURATION
+R1 & R2:
+conf t
+  int se 1/0
+    no ip add
+    encapsulation ppp
+    exit
+  int se 1/1
+    no shut
+    encapsulation ppp
+    exit
+  int multilink 1
+    no shut 
+    encapsulation ppp
+    exit
+  int se 1/0
+    bandwidth 2048
+    ppp multilink group 1
+    exit
+  int se 1/1
+    bandwidth 2048  
+    ppp multilink group 1
+    exit
+show int multilink 1 | inc BW
+
+A -->> uthentication
+C -->> ompression
+CE -->> customer edge
+PE -->> provider edge
+
+AUTHENTICATION AND COMPRESSION CONFIGURATION
+R1:
+conf t
+  username r2 password pass
+  enable secret pass
+  interface multilink 1
+    ppp authentication chap
+    compress stac
+    ip add 200.0.0.1 255.255.255.0
+R2:
+conf t
+  username r1 password pass
+  enable secret pass
+  interface multilink 1
+    ppp authentication chap
+    compress stac
+    ip add 200.0.0.2 255.255.255.0
+R1:
+conf t
+  logging console
+  do debug ppp authentication
+R2:
+conf t
+  int multilink 1
+    shut
+    no shut
+
+undebug all
+
+SPECIAL USE RANGES - possible na lumabas sa exam
+default route ::/0
+loopback ::1/128 
+teredo 2001::/32
+6 to 4 2002::/16
+link-local unicast FE80::/10
+multicast FF00::/8
+
+TRANSITION MECHANISM - parang si supernetiing
+dual stack - ipv4 and ipv6 is running
+tunneling - ipv6 packet is inside the ipv4 packet
+translation - you need to use 6 to 4
+
+IPV6 ADDRESSING
+R1:
+conf t
+  ipv6 unicast-routing    
+  int fa0/0
+    ipv6 enable
+    ipv6 address 192:168:69::1/64
+  int se1/0
+    ipv6 enable
+    ipv6 address 200::1/64
+    end
+R2:
+conf t
+  ipv6 unicast-routing
+  int fa0/0
+    ipv6 enable
+    ipv6 address 201::1/64
+  int fa0/1
+    ipv6 enable
+    ipv6 address 202::1/64
+  int se1/0
+    ipv6 enable
+    ipv6 address 200::2/64
+    end
+R3:
+conf t
+  ipv6 unicast-routing
+  int fa0/0
+    ipv6 enable
+    ipv6 address 203::1/64
+  int fa0/1
+    ipv6 enable
+    ipv6 address 202::1/64
+end
+
+IPV6 ROUTING - OSPFV3 - OSPF FOR IPV6
+R1:
+conf t
+  ipv6 router ospf 1
+    router-id 1.1.1.1
+    exit
+  int fa0/0
+    ipv6 ospf 1 area 0
+    exit
+  int se1/0
+    ipv6 ospf 1 area 0
+    exit
+R2:
+conf t
+  ipv6 router ospf 1
+    router-id 2.2.2.2
+    exit
+  int fa0/0
+    ipv6 ospf 1 area 0
+    exit
+  int se1/0
+    ipv6 ospf 1 area 0
+    exit
+  int fa0/1
+    ipv6 ospf 1 area 0
+    exit
+
+DAY#5 SWITCHING
+db9 -->> laptop doesnt have it anymore
+sfp -->> small form factor pluggable
+t1 -->> 1.544 mbps
+e1 -->> 2.048 mbps
+oc -->> optical cable 
+   -->> 10 mbps, madalas 15mbps
+   -->> diretso switch from isp
+layer 3 switch -->> model number starts at 3
+layer 2 switch -->> model number starts at 2
+
+TASK#0 SWITCHING DIAGRAM
+unlike devices        like devices
+straight cable        crossover cable
+R-->>SW            SW-->>SW
+PC-->>SW        R-->>R
+WAP-->>SW        PC-->>PC
+IP-->>SW        R-->>PC
+
+SW 
+1 RECEIVE
+2 RECEIVE
+3 TRANSMIT
+6 TRANSMIT
+R, PC, WAP, IPPHONE
+1 TRANSMIT 
+2 TRANSMIT
+3 RECEIVE
+6 RECEIVE
+
+T568-A         T568-B        1,2,3,6 working
+wg        wo        4,5,6,7 back up
+g        o        
+wo        wg        unlike device
+b        b        router        switch        pc
+wb        wb        1        1        1
+o        g        2        2        2
+wbr        wbr        3        3        3
+br        br        6        6        6
+
+1. windows+r
+   devmgmt.msc
+   look for the "Port(COM&LPT)"
+2. open the securecrt
+   click the second icon or alt+q
+   protocol:     serial
+   port:     it defend on the pc check the device manager
+   baud rate:     9600
+   data bits:     8
+   parity:     none
+   stop bits:     1
+   DTR/DSR  unchecked
+   RTS/CTS  unchecked 
+   XON/XOFF unchecked
+
+TASK#1 BASIC CONFIGURATION
+conf t
+  hostname SW-TAAS/SW-BABA
+  enable secret pass
+  no logging console
+  no ip domain-lookup
+  no service config
+  service password-encryption
+  line console 0
+    password pass
+    login
+    exec-timeout 0 0
+    exit
+  line vty 0 14
+    password pass
+    login
+    exec-timeout 0 0
+    exit
+
+TASK#2 SETTING IP ADDRESS ON SWITCHES
+SW-TAAS & SW-BABA
+conf t
+  interface vlan 1
+    no shutdown
+    ip address 192.168.10.2/3 255.255.255.0
+    end
+ping 192.168.10.2 -t
+ping 192.168.10.3 -t
+conf t
+  no spanning-tree vlan 1
+  exit
+ping 192.168.10.100
+switching loop, layer 2 loop, broadcast storm
+1-3 blinks/seconds -->> healthy
+7-9 blinks/seconds -->> unhealthy
+conf t
+  spanning-tree vlan 1
+
+switchport -->> a rj45 port
+protocols for your ccna switching
+
+802.1q               802.1d                  802.1w        802.1x
+trunking protocol        STP                           RSTP
+access port        role | states                  improve STP
+trunk port         root bridge               role | states
+                   listening 15 sec     designated | blocking  
+                       learning 15 sec           root | forwarding
+          designated | forwarding        alternate | forwarding
+                 non root bridge
+                  designated | forwarding
+                     root | forwarding
+                   alternate | blocking
+
+TASK#3 802.1Q OR TRUNKING PROTOCOL
+how to make an access port
+conf t
+  int fa0/1 -->> pc to switch or access port
+    switchport mode access -->> to create access port
+    end
+how to make a trunk port
+conf t
+  int fa0/11
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+    end
+SW-TAAS -->> do this on fa0/15,21,24
+SW-BABA -->> do this on fa0/12,16,22
+show interface trunk
+
+TASK#4 802.1D OR STP SPANNING TREE PROTOCOL
+show spanning-tree vlan 1
+root id -->> alpha
+bridge id -->> ikaw
+how to force the new switch become the root bridge
+conf t
+  spanning-tree vlan 1 priority 4096
+  end
+show spanning-tree vlan 1
+
+root bridge election
+1. priority -->> default priority 32768
+2. mac address -->> unique to every switch
+change priority -->> divisible by 2
+
+root port election
+1. cost -->> giga = 4
+             fa = 19
+2. port priority -->> default priority 128 "Prio.Nbr"
+3. port number -->> depends on root bridge
+
+TASK#5 802.1W OR RSTP RAPID SPANNING TREE PROTOCOL
+for the root bridge -->> boss
+conf t
+  spanning-tree mode rapid-pvst
+  spanning-tree backbonefast
+  int range fa0/1 - 10
+    switchport mode access
+    spanning-tree portfast
+    !ignore the warning! -->> wag itype
+    end
+for the non root bridge -->> talunan
+conf t
+  spanning-tree mode rapid-pvst
+  spaniing-tree uplinkfast
+  int range fa0/1-10
+    switchport mode access
+    spanning-tree portfast
+    !ignore the warning! -->> wag itype
+    end
+
+TASK#6 802.1X OR PORT SECURITY
+conf t
+  interface fa0/1
+    switchport port-security
+    switchport port-security mac-address sticky
+    switchport port-security maximum 1
+    switchport port-security violation shutdown -->> your dead
+    end
+show port-security address
+show int status err-disable
+conf t
+  int fa0/1
+    shutdown
+    no shutdown
+    end
+
+TASK#7 ETHERCHANNEL -->> combines switch to switch connection
+SW-TAAS:
+conf t
+  int range fa0/11,fa0/15,fa0/21
+    shutdown
+    channel-protocol lacp
+    channel-group 1 mode active
+    no shutdown
+    exit
+   int port-channel 1
+     switchport trunk encapsulation dot1q
+     switchport mode trunk
+     end
+SW-BABA:
+conf t
+  int range fa0/12,fa0/16,fa0/22
+  shutdown
+    channel-protocol lacp
+    channel-group 1 mode active
+    no shutdown
+    exit
+   int port-channel 1
+     switchport trunk encapsulation dot1q
+     switchport mode trunk
+     end
+show etherchannel summary
+show int port-channel 1 | inc Bw
+
+TASK#8 SWITCH SHOW COMMANDS
+show cdp neighbors 
+-->> shows device ID, local int, port ID
+show mac address-table
+-->> mac address of the devices connected to the switch
+show interface trunk
+-->> switch to switch connection
+show vlan brief
+-->> shows access ports and vlans
+
+TASK#9 VLANS OR VIRTUAL LANS
+vlan 1/native vlan/untagged vlan
+hub have cdma to prevent collision half duplex only
+1 broadcast domain per vlan
+            router       switch        hub        
+collsion domain        1/port       1/port    1/whole hub
+broadcast domain    1/port        1/sw    1/whole hub
+                 by default
+
+step1: ensure that 802.1q is working to make sure that multiple vlan can use 
+       a single switch by doing trunk
+
+step2: vtp vlan trunking protocol -->> centralized management of vlans place
+                                       same username and same password
+conf t
+  vtp mode server
+  vtp domain cisco -->> make sure parehas to sa iba
+  vtp password ccna -->> make sure parehas to sa iba
+  vtp version 2
+  end
+
+step3: setting vlans
+SW-TAAS:
+conf t
+  vlan 69
+    name galingtaas
+    end
+SW-BABA
+conf t
+  vlan 88
+    name galingbaba
+    end
+sh vlan brief
+SW-TAAS:
+conf t
+  vlan 2
+  name IT
+  vlan 4
+  name HR
+  vlan 6
+  name MGMT
+  vlan 8
+  name GYM
+  end
+SW-BABA 
+conf t
+  vlan 3
+  name SALES
+  vlan 5
+  name SECURITY
+  vlan 7
+  name CCTV
+  vlan 9
+  name ADMIN
+  end
+
+step4: put the ports into their corresponding vlans
+SW-TAAS:
+conf t
+  int fa0/1
+    switchport access vlan 2
+    end
+SW-TAAS & SW-BABA
+conf t
+  int range fa0/2 - 3
+    switchport access vlan 2/3
+    end
+
+step5: vlan router or router on a stick / sub-interface
+gawin sa notepad i paste sa router 4 times make 
+sure napalitan yung V-->>vlan number
+conf t
+  int giga0/0.V
+    encapsulation dot1q V
+    ip address 192.168.V.1 255.255.255.0
+    exit
+  ip dhcp pool dhcp-V
+    network 192.168.V.0 255.255.255.0
+    default-router 192.168.V.1
+    domain-name CCNA-V.com
+    end
+
+TASK#10 HSRP HOT STANDBY ROUTING PROTOCOL
+
+step1: ip addressing
+
+CORE-1:
+conf t
+  int vlan 1
+    no shut
+    ip address 10.0.0.2 255.0.0.0
+    exit
+  int fa1/0
+    no shut
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+    exit
+  int fa0/1
+    no shut
+    ip address 200.0.0.1 255.255.255.0
+    exit
+  no ip routing
+  ip routing -->> enable routing capability of a switch
+  router eigrp 100
+    network 10.0.0.0
+    network 200.0.0.0
+    no auto-summary
+    end
+    
+CORE-2:   
+conf t
+  int vlan 1
+    no shut
+    ip address 10.0.0.3 255.0.0.0
+    exit
+  int fa1/0
+    no shut
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+    exit
+  int fa0/1
+    no shut
+    ip address 208.0.0.1 255.255.255.0
+    exit
+  no ip routing
+  ip routing -->> enable routing capability of a switch
+  router eigrp 100
+    network 10.0.0.0
+    network 208.0.0.0
+    no auto-summary
+    end
+
+ISPRouter:
+conf t
+  int loopback 0
+    ip address 8.8.8.8 255.255.255.255 -->> google
+    exit
+  int fa0/0
+    no shut
+    ip address 200.0.0.2 255.255.255.0
+    exit
+  int fa0/1
+    no shut
+    ip address 208.0.0.2 255.255.255.0
+    exit
+  router eigrp 100
+    network 0.0.0.0
+    no auto-summary
+    end
+
+PC:
+conf t
+  int fa0/0
+    no shut
+    ip address 10.0.0.100 255.0.0.0
+    exit
+  ip route 0.0.0.0 0.0.0.0 10.0.0.2
+  no ip route 0.0.0.0 0.0.0.0 10.0.0.2
+  ip route 0.0.0.0 0.0.0.0 10.0.0.1 
+  end
+
+step2: HSRP configuration -->> the higher the better
+"priority"
+pag mas mataas ikaw ang active
+pag mas mababa ikaw ang standby
+
+R1:
+conf t
+  int vlan 1
+    standby 1 ip 10.0.0.1
+    standby 1 preempt -->> auto balik sa active
+    standby 1 priority 150
+    end
+
+R2:
+conf t
+  int vlan 1
+    standby 1 ip 10.0.0.1
+    standby 1 priority 100
+    end
+                        
+R1: show standby brief -->> to know whos is active and standby, local is sarili
+R2: show standby brief -->> state:standby    
+to test, shutdown int vlan 1 & ping 8.8.8.8
+if success then HSRP works
+
+introduction about the last day but it is not the last day it is the start because
+we have some seminar after it.
+
+router and switch, what is more important.
+router 
+-->> 90% in training
+-->> router parang tropa mo yan kahit after 2 years di mo kausapin tropa padin
+-->> one time configuration lang except kung nag palit or nagkaroon ng problem
+     lagyan ng nat tapos lagyan ng internet ok na yan
+-->> sa ngaun you only need router for BGP
+-->> lahat ng kayang gawin ng router kaya ng gawin ng layer 3 switch even bgp but 
+     still there are applications that only router can run
+-->> you only use router if you use serial t1 1.544mbps / e1 2.048mbps
+-->> OC1 is used by large company, ang pinaka mababa is yung 10mbps, 15mbps and up
+     nga yun madalas. i dont need now the serial because 
+-->> optical fiber 1 is connected in SFP
+
+switch    
+-->> 10% in training
+-->> parang gf yan after 2 years di mo kausapin may iba ng naka pasok dyan
+-->> you always use it, galawin mo ng galawin almost everyday kung gusto mo
+-->> dumadagdag ng dumadagdag ang empoloyee so nadadagdagan ng port
+-->> we have layer 2 and layer 3 switch
+  -->> layer 2 datalink, frames
+  -->> layer 3 network, routing
+
+how are you going to know what kind of layer is your switch
+-->> basta 3 nagsisimula pataas ang router at switch layer 3 yun
+-->> wala na kaming layer 2 kung gusto mong makakita, apply ka sa mga kalaban 
+     namin or mga  training schools
+
+not all the company need a router because they only use it if they have a BGP,
+gagamit ka lang ng BGP if you have a big company you cannot connect your fiber 
+optic in your switch because it doesnt support it so gagamit ka muna ng sfp as 
+converter madalas yung sfp namin hindi namin sinasaksak sa switch ang sfp kasi 
+namimiss placed sa bag
+
+mag drawing ng switch na kasing laki ng sayo drawing ka ng dalawang switch that
+will represent the switch in your table also draw 1 router the vlanrouter pagandahan
+ng drawing, the units connected to your switch, next is to connect the devices
+
+DIFFERENT KIND OF ETHERNET PORT
+when do you use straight and crossover
+straight for unlike device
+router to switch, switch to pc, router to pc, switch to wap, ip phone to switch
+straight    standard B    WO O WG B WB G WBR BR
+crossover    standard A    WG G WO B WB O WBR BR
+check the paint port
+kaya sobra siya kasi pang backup yung ibang port, 1236 lang ang gumagana
+crossover for like device
+sw to sw, router to router, pc to pc, router to pc
+like devices it doesn't mean parehas na device it is more on port,
+it is more on transmit / recieve
+after mo malaman ito pwede mo ng kalimutan lahat because our devices uses now specially
+router and switch use auto mdix or auto sensing but better use the normal physical straight
+or crossover because you wnat to check it on your device, the device will give you lot of
+details before you will know that it support auto mdix or auto sensing
+
+sino si taas na switch gamitin ang cable and connect it on the switch "cross cable"
+taas 11-12 
+baba 15-16
+any  21-22
+ang kailangan umilaw, i dont care what is the color basta umilaw
+the difference between router and switch
+router - not automatically no shutdown
+switch - automatically no shutdown
+
+paano nacoconfigure ang switch check the switch tingin sa likod lahat ng cisco 
+switch na coconfigure sa likod yung mga nasa likod imagine niyo nalang
+
+wala ng db9 ang mga laptop ngayon. kung meron pa tapon mo na yun wag ka ng bumili 
+ng pentium 2 or 3 na laptop bili ka lang ng usb to serial wala ka ng mabibilan 
+nito sa cdr king lang even na router na ref meron dun pero may expiration date
+console to switch or router, what are the certain settings that your router need
+
+open in tab should be checked only securecrt have
+show how does it look on your exam use packet tracer how to console
+kabisaduhin ang mga input ng ating switch and router para ma configure
+
+cisco switch 8 port 50k mas matibay
+cdr king switch 8 port 1k di matibay
+dlink switch 8 port 2k 
+linksys switch 8 port 1.5k
+
+802.1Q
+ibat ibang tawag sa switchport
+kailan magiging access port? pag connected sa end device pc to switch
+kailan magiging trunk port? pag connected switch to switch
+pag switch to router it depends, pag ginawa lang roas!
+vlan router, roas router on a stick
+
+ang router tropa
+ang switch syota parang aso na rin
+more than 2? parehas lalake? may babae? babae at lalake? hunter dogs, alpha!
+sh spanning-tree vlan 1
+alpha root id depends on mac add, ikaw yung bridge id, if you win in the election
+switching you are the root bridge, pag bago switch mas mataas mac add, pag luma 
+switch mas mababa mac add, delay latency and packet loss, ang alpha or root bridge
+yung mas bago na switch, in real thing yung nasa taas talaga ang root bridge at 
+yung nasa baba ang non root bridge, root bridge lahat ng port mo designated tapos
+yung states forwarding non root bridge lang yung nagbabago ang role at states
+7-10 b/s not healthy, 1-3 b/s healthy root bridge ikaw ang boss di ka nakikipag 
+negotiate root/forwarding yan yung umaandar na ports r/f, alternate/ports back up lang a/p
+vlan, provide security,broadcast storm ,network loop
+vlan1 = default vlan, native vlan or untagged vlan 'pang expert'
+cisco switches only have 1 vlan by default
+router and switch - magparami ng collision domain
+router - magparami ng broadcast domain
+switch - magparami ng broadcast domain if gagamit ng vlan
+1 vlan - broadcast domain, collision domain - half duplex
+cdma protection ng hub via data collision, hindi effective lagi my data loss
+        router        switch        hub
+collision    1/port        1/port        1/whole hub
+domain                        
+                  by default    
+broadcast    1/port        1/sw        1/whole hub
+domain    
+para makadaan ang maraming vlan sa iisang cable use 802.1q - make sure
+pag nasa same vlan nasa same broadcast domain
+
+
